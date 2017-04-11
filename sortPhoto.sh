@@ -1,6 +1,7 @@
 #!/bin/sh
 
 # 2017-4-10 first version
+# 2017-4-11 move RAW file to the RAW folder under date folder.
 
 sortPhoto()
 {
@@ -26,17 +27,37 @@ do
 				do
 					mkdir -p $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}/\@eaDir
 				done
-				mv $ff $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}
-				#cp $ff $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}
-				echo "$(basename $ff) has moved to $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}"
-				#echo $(dirname $ff)
-				#echo $(basename $ff)
-				if [ -d $(dirname $ff)/\@eaDir/$(basename $ff) ]; then
-					cp -r $(dirname $ff)/\@eaDir/$(basename $ff) $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}/\@eaDir
-					rm -r $(dirname $ff)/\@eaDir
-					#echo "\@eaDir$(basename $ff) has moved to $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}/\@eaDir"
+				
+				if [ ${ff##*.} = "ARW" ] || [ ${ff##*.} = "DNG" ] || [ ${ff##*.} = "PEF" ]; then
+					
+					#make RAW folder
+					until [ -d $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}/RAW ]
+					do
+						mkdir -p $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}/RAW/\@eaDir
+					done
+					
+					#move file
+					cp $ff $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}/RAW
+					echo "$(basename $ff) has moved to $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}/RAW"
+					if [ -d $(dirname $ff)/RAW/\@eaDir/$(basename $ff) ]; then
+						cp -r $(dirname $ff)/RAW/\@eaDir/$(basename $ff) $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}/RAW/\@eaDir
+						rm -r $(dirname $ff)/RAW\@eaDir
+						#echo "\@eaDir$(basename $ff) has moved to $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}/\@eaDir"
+					fi
+					reIndex $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}/RAW
+				else
+					#mv $ff $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}
+					cp $ff $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}
+					echo "$(basename $ff) has moved to $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}"
+					#echo $(dirname $ff)
+					#echo $(basename $ff)
+					if [ -d $(dirname $ff)/\@eaDir/$(basename $ff) ]; then
+						cp -r $(dirname $ff)/\@eaDir/$(basename $ff) $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}/\@eaDir
+						rm -r $(dirname $ff)/\@eaDir
+						#echo "\@eaDir$(basename $ff) has moved to $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}/\@eaDir"
+					fi
+					reIndex $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}
 				fi
-				reIndex $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}
 			else
 				echo "No EXIF information."
 			fi
@@ -47,7 +68,6 @@ do
 	removeEmptyFolder $1
 done
 }
-
 
 removeEmptyFolder()
 {
