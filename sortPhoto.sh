@@ -37,7 +37,7 @@ do
 					done
 					
 					#move file
-					cp $ff $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}/RAW
+					mv $ff $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}/RAW
 					echo "$(basename $ff) has moved to $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}/RAW"
 					if [ -d $(dirname $ff)/RAW/\@eaDir/$(basename $ff) ]; then
 						cp -r $(dirname $ff)/RAW/\@eaDir/$(basename $ff) $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}/RAW/\@eaDir
@@ -46,8 +46,7 @@ do
 					fi
 					reIndex $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}/RAW
 				else
-					#mv $ff $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}
-					cp $ff $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}
+					mv $ff $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}
 					echo "$(basename $ff) has moved to $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}"
 					#echo $(dirname $ff)
 					#echo $(basename $ff)
