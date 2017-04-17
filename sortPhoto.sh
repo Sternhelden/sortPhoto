@@ -70,7 +70,7 @@ done
 
 removeEmptyFolder()
 {
-if [ ! "$(ls -A /$1)" ]; then
+if [ ! "$(ls -A $1)" ]; then
    echo "$1 is empty and removed!"
    rm -r /$1
 fi
