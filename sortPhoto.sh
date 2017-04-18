@@ -12,7 +12,7 @@ do
 	echo -e $ff"\r\n" >> $3
 	echo ">>>>>>>>>>" >> $3
 		if [ -f "$ff" ]; then
-			DIRTOMAKE=$(exiv2 -pt $ff | grep Exif.Photo.DateTimeOriginal | sed 's/Exif.Photo.DateTimeOriginal                  Ascii      20  //')
+			DIRTOMAKE=$(exiv2 -pt $ff | grep -a Exif.Photo.DateTimeOriginal | sed 's/Exif.Photo.DateTimeOriginal                  Ascii      20  //')
 			# echo $ff
 			# echo ${DIRTOMAKE:0:4}
 			# echo ${DIRTOMAKE:5:2}
@@ -94,7 +94,8 @@ until [ -e ./log-$now.txt ]
 do
 	touch ./log-$now.txt
 done
-	
+
+echo -e "\r\n"$(date "+%Y-%m-%d %H:%M:%S")"\r\n" >> ./log-$now.txt
 sortPhoto $1 $2 ./log-$now.txt
 
 
