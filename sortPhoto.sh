@@ -9,6 +9,8 @@ for ff in $1*
 do
 	if [ "$ff" != "." ] && [ "$(basename $ff)" != "@eaDir" ]; then
 	echo $ff
+	echo -e $ff"\r\n" >> $3
+	echo ">>>>>>>>>>" >> $3
 		if [ -f "$ff" ]; then
 			DIRTOMAKE=$(exiv2 -pt $ff | grep Exif.Photo.DateTimeOriginal | sed 's/Exif.Photo.DateTimeOriginal                  Ascii      20  //')
 			# echo $ff
@@ -39,6 +41,7 @@ do
 					#move file
 					mv $ff $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}/RAW
 					echo "$(basename $ff) has moved to $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}/RAW"
+					echo -e "$(basename $ff) has moved to $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}/RAW\r\n" >> $3
 					if [ -d $(dirname $ff)/RAW/\@eaDir/$(basename $ff) ]; then
 						cp -r $(dirname $ff)/RAW/\@eaDir/$(basename $ff) $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}/RAW/\@eaDir
 						rm -r $(dirname $ff)/RAW\@eaDir
@@ -48,6 +51,7 @@ do
 				else
 					mv $ff $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}
 					echo "$(basename $ff) has moved to $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}"
+					echo -e "$(basename $ff) has moved to $2${DIRTOMAKE:0:4}/${DIRTOMAKE:5:2}${DIRTOMAKE:8:2}\r\n" >> $3
 					#echo $(dirname $ff)
 					#echo $(basename $ff)
 					if [ -d $(dirname $ff)/\@eaDir/$(basename $ff) ]; then
@@ -59,12 +63,13 @@ do
 				fi
 			else
 				echo "No EXIF information."
+				echo -e "No EXIF information.\r\n" >> $3
 			fi
 		elif [ -d "$ff" ]; then
 			sortPhoto $ff/ $2
 		fi
-	fi
 	removeEmptyFolder $1
+	fi
 done
 }
 
@@ -72,6 +77,7 @@ removeEmptyFolder()
 {
 if [ ! "$(ls -A $1)" ]; then
    echo "$1 is empty and removed!"
+   echo -e "$1 is empty and removed!\r\n"
    rm -r /$1
 fi
 }
@@ -82,7 +88,15 @@ reIndex()
 	synoindex -R $1
 }
 
-sortPhoto $1 $2
+
+now=$(date "+%Y-%m-%d")
+until [ -e ./log-$now.txt ]
+do
+	touch ./log-$now.txt
+done
+	
+sortPhoto $1 $2 ./log-$now.txt
+
 
 #$1 Source directory
 #$2 Disitnation directory 
